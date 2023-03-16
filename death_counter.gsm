@@ -1,0 +1,31 @@
+			text
+			org 0x000 ; start here on reset
+			jmp main
+; Data memory layout
+			data
+leds:		bss 1
+display:	bss 1
+pushbtn:	bss 1
+contador:	byte 0
+; Main program
+			text
+			org 0x010
+main: 		ldm r1, contador; load values
+continue:	out r1, display
+again:		inp r3, pushbtn
+			and r3, r3, 1
+			bz again
+			jsb delay
+			add r1, r1, 1
+			stm r1, contador
+			;jsb delay
+			jmp continue
+			
+delay:		add r7, r0, 0
+again3:		add r6, r0, 0
+again2:		add r5, r0, 0
+again1:		add r5, r5, 1
+			sub r0, r5, 0x10
+			bnz again1
+			ret 
+			
