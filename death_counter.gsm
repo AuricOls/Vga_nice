@@ -6,7 +6,7 @@
 leds:		bss 1
 display:	bss 1
 pushbtn:	bss 1
-contador:	byte 0
+contador:	byte 0x0F
 ; Main program
 			text
 			org 0x010
@@ -16,16 +16,28 @@ again:		inp r3, pushbtn
 			and r3, r3, 1
 			bz again
 			jsb delay
-			add r1, r1, 1
-			stm r1, contador
+			sub r1, r1, 1
+			sub r4, r1, 0
+			bz cero
+			;stm r1, contador
 			;jsb delay
 			jmp continue
+cero:		out r1, display
+			jmp cero
+			
+			
 			
 delay:		add r7, r0, 0
 again3:		add r6, r0, 0
 again2:		add r5, r0, 0
 again1:		add r5, r5, 1
-			sub r0, r5, 0x10
+			sub r0, r5, 0xFF
 			bnz again1
+			add r6, r6, 1
+			sub r0, r6, 0xFF
+			bnz again2
+			add r7, r7, 1
+			sub r0, r7, 0x62
+			bnz again3
 			ret 
-			
+				
